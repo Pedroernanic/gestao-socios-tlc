@@ -52,7 +52,6 @@ const PLANOS = [
 
 const METODOS = [
   { valor: "pix", label: "PIX recorrente" },
-  { valor: "boleto", label: "Boleto" },
   { valor: "cartao", label: "Cartão de crédito" },
 ];
 
@@ -68,7 +67,20 @@ function mesAtualKey() {
 function formatMes(key) {
   if (!key) return "—";
   const [ano, mes] = key.split("-");
-  const nomes = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  const nomes = [
+    "jan",
+    "fev",
+    "mar",
+    "abr",
+    "mai",
+    "jun",
+    "jul",
+    "ago",
+    "set",
+    "out",
+    "nov",
+    "dez",
+  ];
   return `${nomes[parseInt(mes, 10) - 1]}/${ano}`;
 }
 
@@ -89,7 +101,11 @@ function diaVencimentoEfetivo(ano, mesIndex, diaEscolhido) {
 
 function proximoVencimento(socio) {
   const hoje = new Date();
-  const dia = diaVencimentoEfetivo(hoje.getFullYear(), hoje.getMonth(), socio.diaVencimento || 1);
+  const dia = diaVencimentoEfetivo(
+    hoje.getFullYear(),
+    hoje.getMonth(),
+    socio.diaVencimento || 1
+  );
   return new Date(hoje.getFullYear(), hoje.getMonth(), dia);
 }
 
@@ -133,7 +149,10 @@ function ultimosMeses(n) {
   const agora = new Date();
   for (let i = n - 1; i >= 0; i--) {
     const d = new Date(agora.getFullYear(), agora.getMonth() - i, 1);
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}`;
     arr.push({ key, label: formatMes(key) });
   }
   return arr;
@@ -146,7 +165,8 @@ function mesKeyRelativo(i) {
 
 function mesesPagosRecentes(socio, n = 6) {
   const meses = ultimosMeses(n);
-  return meses.filter((m) => socio.pagamentos && socio.pagamentos[m.key]).length;
+  return meses.filter((m) => socio.pagamentos && socio.pagamentos[m.key])
+    .length;
 }
 
 function ehContribuinteRegular(socio) {
@@ -154,17 +174,84 @@ function ehContribuinteRegular(socio) {
 }
 
 const NOVO_VAZIO = {
-  nome: "", tlc: "", cpf: "", telefone: "", nascimento: "",
-  metodoPagamento: "pix", plano: 20, diaVencimento: 5, observacao: "",
+  nome: "",
+  tlc: "",
+  cpf: "",
+  telefone: "",
+  nascimento: "",
+  metodoPagamento: "pix",
+  plano: 20,
+  diaVencimento: 5,
+  observacao: "",
 };
 
 const EXEMPLOS = [
-  { nome: "Ana Paula Ferreira", tlc: "TLC 42 - Maceió", cpf: "123.456.789-00", telefone: "(82) 99911-2233", nascimento: "1994-03-12", metodoPagamento: "pix", plano: 35, diaVencimento: 5, pagoMeses: [0, 1] },
-  { nome: "Bruno Cavalcante Lima", tlc: "TLC 40 - Maceió", cpf: "987.654.321-00", telefone: "(82) 98822-1144", nascimento: "1990-07-25", metodoPagamento: "boleto", plano: 20, diaVencimento: 10, pagoMeses: [1] },
-  { nome: "Carla Rejane Nunes", tlc: "TLC 45 - Maceió", cpf: "456.789.123-00", telefone: "(82) 97733-5566", nascimento: "1988-11-02", metodoPagamento: "cartao", plano: 50, diaVencimento: 15, pagoMeses: [0, 1, 2] },
-  { nome: "Diego Alves Barbosa", tlc: "TLC 41 - Maceió", cpf: "321.654.987-00", telefone: "(82) 96644-7788", nascimento: "1996-01-19", metodoPagamento: "pix", plano: 20, diaVencimento: 20, pagoMeses: [] },
-  { nome: "Elisângela Rocha Melo", tlc: "TLC 45 - Maceió", cpf: "654.321.987-00", telefone: "(82) 95533-9900", nascimento: "1992-09-08", metodoPagamento: "pix", plano: 50, diaVencimento: 30, pagoMeses: [0, 1, 2] },
-  { nome: "Fábio Henrique Souza", tlc: "TLC 38 - Maceió", cpf: "159.753.486-00", telefone: "(82) 94411-3322", nascimento: "1985-05-30", metodoPagamento: "boleto", plano: 35, diaVencimento: 30, pagoMeses: [] },
+  {
+    nome: "Ana Paula Ferreira",
+    tlc: "TLC 42 - Maceió",
+    cpf: "123.456.789-00",
+    telefone: "(82) 99911-2233",
+    nascimento: "1994-03-12",
+    metodoPagamento: "pix",
+    plano: 35,
+    diaVencimento: 5,
+    pagoMeses: [0, 1],
+  },
+  {
+    nome: "Bruno Cavalcante Lima",
+    tlc: "TLC 40 - Maceió",
+    cpf: "987.654.321-00",
+    telefone: "(82) 98822-1144",
+    nascimento: "1990-07-25",
+    metodoPagamento: "boleto",
+    plano: 20,
+    diaVencimento: 10,
+    pagoMeses: [1],
+  },
+  {
+    nome: "Carla Rejane Nunes",
+    tlc: "TLC 45 - Maceió",
+    cpf: "456.789.123-00",
+    telefone: "(82) 97733-5566",
+    nascimento: "1988-11-02",
+    metodoPagamento: "cartao",
+    plano: 50,
+    diaVencimento: 15,
+    pagoMeses: [0, 1, 2],
+  },
+  {
+    nome: "Diego Alves Barbosa",
+    tlc: "TLC 41 - Maceió",
+    cpf: "321.654.987-00",
+    telefone: "(82) 96644-7788",
+    nascimento: "1996-01-19",
+    metodoPagamento: "pix",
+    plano: 20,
+    diaVencimento: 20,
+    pagoMeses: [],
+  },
+  {
+    nome: "Elisângela Rocha Melo",
+    tlc: "TLC 45 - Maceió",
+    cpf: "654.321.987-00",
+    telefone: "(82) 95533-9900",
+    nascimento: "1992-09-08",
+    metodoPagamento: "pix",
+    plano: 50,
+    diaVencimento: 30,
+    pagoMeses: [0, 1, 2],
+  },
+  {
+    nome: "Fábio Henrique Souza",
+    tlc: "TLC 38 - Maceió",
+    cpf: "159.753.486-00",
+    telefone: "(82) 94411-3322",
+    nascimento: "1985-05-30",
+    metodoPagamento: "boleto",
+    plano: 35,
+    diaVencimento: 30,
+    pagoMeses: [],
+  },
 ];
 
 export default function GestaoSociosTLC() {
@@ -202,7 +289,11 @@ export default function GestaoSociosTLC() {
   async function salvar(novosDados) {
     setDados(novosDados);
     try {
-      const res = await window.storage.set(STORAGE_KEY, JSON.stringify(novosDados), true);
+      const res = await window.storage.set(
+        STORAGE_KEY,
+        JSON.stringify(novosDados),
+        true
+      );
       if (!res) setErro("Não foi possível salvar. Tente novamente.");
       else setErro(null);
     } catch {
@@ -220,9 +311,15 @@ export default function GestaoSociosTLC() {
       return {
         id: `${Date.now()}-${i}`,
         codigo: String(i + 1).padStart(4, "0"),
-        nome: e.nome, tlc: e.tlc, cpf: e.cpf, telefone: e.telefone,
-        nascimento: e.nascimento, metodoPagamento: e.metodoPagamento, plano: e.plano,
-        diaVencimento: e.diaVencimento, pagamentos,
+        nome: e.nome,
+        tlc: e.tlc,
+        cpf: e.cpf,
+        telefone: e.telefone,
+        nascimento: e.nascimento,
+        metodoPagamento: e.metodoPagamento,
+        plano: e.plano,
+        diaVencimento: e.diaVencimento,
+        pagamentos,
       };
     });
     salvar({ contador: EXEMPLOS.length + 1, socios: lista });
@@ -237,9 +334,15 @@ export default function GestaoSociosTLC() {
 
   function iniciarEdicao(s) {
     setNovo({
-      nome: s.nome, tlc: s.tlc || "", cpf: s.cpf || "", telefone: s.telefone || "",
-      nascimento: s.nascimento || "", metodoPagamento: s.metodoPagamento || "pix",
-      plano: s.plano, diaVencimento: s.diaVencimento || 1, observacao: s.observacao || "",
+      nome: s.nome,
+      tlc: s.tlc || "",
+      cpf: s.cpf || "",
+      telefone: s.telefone || "",
+      nascimento: s.nascimento || "",
+      metodoPagamento: s.metodoPagamento || "pix",
+      plano: s.plano,
+      diaVencimento: s.diaVencimento || 1,
+      observacao: s.observacao || "",
     });
     setEditandoId(s.id);
     setErroForm(null);
@@ -257,7 +360,9 @@ export default function GestaoSociosTLC() {
     ev.preventDefault();
     if (!novo.nome.trim() || !novo.cpf.trim()) return;
     const cpfNormalizado = novo.cpf.trim();
-    const cpfDuplicado = socios.some((s) => s.cpf.trim() === cpfNormalizado && s.id !== editandoId);
+    const cpfDuplicado = socios.some(
+      (s) => s.cpf.trim() === cpfNormalizado && s.id !== editandoId
+    );
     if (cpfDuplicado) {
       setErroForm("Já existe um sócio cadastrado com esse CPF.");
       return;
@@ -268,10 +373,15 @@ export default function GestaoSociosTLC() {
         s.id === editandoId
           ? {
               ...s,
-              nome: novo.nome.trim(), tlc: novo.tlc.trim(), cpf: cpfNormalizado,
-              telefone: novo.telefone.trim(), nascimento: novo.nascimento,
-              metodoPagamento: novo.metodoPagamento, plano: Number(novo.plano),
-              diaVencimento: Number(novo.diaVencimento) || 1, observacao: novo.observacao.trim(),
+              nome: novo.nome.trim(),
+              tlc: novo.tlc.trim(),
+              cpf: cpfNormalizado,
+              telefone: novo.telefone.trim(),
+              nascimento: novo.nascimento,
+              metodoPagamento: novo.metodoPagamento,
+              plano: Number(novo.plano),
+              diaVencimento: Number(novo.diaVencimento) || 1,
+              observacao: novo.observacao.trim(),
             }
           : s
       );
@@ -281,10 +391,15 @@ export default function GestaoSociosTLC() {
       const item = {
         id: `${Date.now()}`,
         codigo: String(contadorAtual).padStart(4, "0"),
-        nome: novo.nome.trim(), tlc: novo.tlc.trim(), cpf: cpfNormalizado,
-        telefone: novo.telefone.trim(), nascimento: novo.nascimento,
-        metodoPagamento: novo.metodoPagamento, plano: Number(novo.plano),
-        diaVencimento: Number(novo.diaVencimento) || 1, observacao: novo.observacao.trim(),
+        nome: novo.nome.trim(),
+        tlc: novo.tlc.trim(),
+        cpf: cpfNormalizado,
+        telefone: novo.telefone.trim(),
+        nascimento: novo.nascimento,
+        metodoPagamento: novo.metodoPagamento,
+        plano: Number(novo.plano),
+        diaVencimento: Number(novo.diaVencimento) || 1,
+        observacao: novo.observacao.trim(),
         pagamentos: {},
       };
       salvar({ contador: contadorAtual + 1, socios: [...socios, item] });
@@ -312,20 +427,43 @@ export default function GestaoSociosTLC() {
 
   function exportarCSV(lista) {
     const cabecalho = [
-      "Código", "Nome", "TLC que fez", "CPF", "Telefone", "Data de nascimento",
-      "Método de pagamento", "Plano", "Desconto", "Dia de vencimento",
-      "Último pagamento", "Status", "Observação",
+      "Código",
+      "Nome",
+      "TLC que fez",
+      "CPF",
+      "Telefone",
+      "Data de nascimento",
+      "Método de pagamento",
+      "Plano",
+      "Desconto",
+      "Dia de vencimento",
+      "Último pagamento",
+      "Status",
+      "Observação",
     ];
     const linhas = lista.map((s) => [
-      s.codigo, s.nome, s.tlc || "", s.cpf || "", s.telefone || "", formatData(s.nascimento),
-      metodoLabel(s.metodoPagamento), `R$ ${s.plano}`,
+      s.codigo,
+      s.nome,
+      s.tlc || "",
+      s.cpf || "",
+      s.telefone || "",
+      formatData(s.nascimento),
+      metodoLabel(s.metodoPagamento),
+      `R$ ${s.plano}`,
       `${PLANOS.find((p) => p.valor === s.plano)?.desconto ?? 0}%`,
-      `Dia ${s.diaVencimento || 1}`, formatMes(ultimoPagamento(s)), statusDe(s), s.observacao || "",
+      `Dia ${s.diaVencimento || 1}`,
+      formatMes(ultimoPagamento(s)),
+      statusDe(s),
+      s.observacao || "",
     ]);
     const csv = [cabecalho, ...linhas]
-      .map((linha) => linha.map((campo) => `"${String(campo).replace(/"/g, '""')}"`).join(","))
+      .map((linha) =>
+        linha.map((campo) => `"${String(campo).replace(/"/g, '""')}"`).join(",")
+      )
       .join("\n");
-    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob(["\uFEFF" + csv], {
+      type: "text/csv;charset=utf-8;",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -343,7 +481,12 @@ export default function GestaoSociosTLC() {
   function gerarCarteirinha(id) {
     const lista = socios.map((s) =>
       s.id === id
-        ? { ...s, nftTokenId: s.nftTokenId || `TLC-NFT-${s.codigo}`, nftEmitidoEm: s.nftEmitidoEm || new Date().toISOString().slice(0, 10) }
+        ? {
+            ...s,
+            nftTokenId: s.nftTokenId || `TLC-NFT-${s.codigo}`,
+            nftEmitidoEm:
+              s.nftEmitidoEm || new Date().toISOString().slice(0, 10),
+          }
         : s
     );
     salvar({ ...dados, socios: lista });
@@ -358,6 +501,7 @@ export default function GestaoSociosTLC() {
           nome: socio.nome,
           cpf: socio.cpf,
           telefone: socio.telefone,
+          metodoPagamento: socio.metodoPagamento,
           valor: socio.plano,
           diaVencimento: socio.diaVencimento,
           codigo: socio.codigo,
@@ -365,7 +509,9 @@ export default function GestaoSociosTLC() {
       });
       const data = await resp.json();
       if (!resp.ok) {
-        alert("Não foi possível gerar a cobrança: " + JSON.stringify(data.error));
+        alert(
+          "Não foi possível gerar a cobrança: " + JSON.stringify(data.error)
+        );
         return;
       }
       window.open(data.link, "_blank");
@@ -375,18 +521,39 @@ export default function GestaoSociosTLC() {
   }
 
   function renderBadge(status) {
-    if (status === "adimplente") return <span className="tlc-badge tlc-badge-ok"><CheckCircle2 size={12} /> Adimplente</span>;
-    if (status === "inativo") return <span className="tlc-badge tlc-badge-inativo"><MinusCircle size={12} /> Inativo</span>;
-    return <span className="tlc-badge tlc-badge-no"><XCircle size={12} /> Inadimplente</span>;
+    if (status === "adimplente")
+      return (
+        <span className="tlc-badge tlc-badge-ok">
+          <CheckCircle2 size={12} /> Adimplente
+        </span>
+      );
+    if (status === "inativo")
+      return (
+        <span className="tlc-badge tlc-badge-inativo">
+          <MinusCircle size={12} /> Inativo
+        </span>
+      );
+    return (
+      <span className="tlc-badge tlc-badge-no">
+        <XCircle size={12} /> Inadimplente
+      </span>
+    );
   }
 
   const listaFiltrada = useMemo(() => {
     const termo = busca.trim().toLowerCase();
     return socios.filter((s) => {
-      if (termo && !(s.nome.toLowerCase().includes(termo) || s.codigo.includes(termo))) return false;
-      if (filtroStatus !== "todos" && statusDe(s) !== filtroStatus) return false;
-      if (filtroPlano !== "todos" && s.plano !== Number(filtroPlano)) return false;
-      if (filtroMetodo !== "todos" && s.metodoPagamento !== filtroMetodo) return false;
+      if (
+        termo &&
+        !(s.nome.toLowerCase().includes(termo) || s.codigo.includes(termo))
+      )
+        return false;
+      if (filtroStatus !== "todos" && statusDe(s) !== filtroStatus)
+        return false;
+      if (filtroPlano !== "todos" && s.plano !== Number(filtroPlano))
+        return false;
+      if (filtroMetodo !== "todos" && s.metodoPagamento !== filtroMetodo)
+        return false;
       return true;
     });
   }, [socios, busca, filtroStatus, filtroPlano, filtroMetodo]);
@@ -400,21 +567,36 @@ export default function GestaoSociosTLC() {
         (s) =>
           s.codigo.toLowerCase() === termo ||
           s.nome.toLowerCase() === termo ||
-          (termoDigits.length >= 8 && s.telefone && s.telefone.replace(/\D/g, "") === termoDigits)
+          (termoDigits.length >= 8 &&
+            s.telefone &&
+            s.telefone.replace(/\D/g, "") === termoDigits)
       ) || "nao-encontrado"
     );
   }, [socios, buscaParceiro]);
 
-  const totalAdimplentes = socios.filter((s) => statusDe(s) === "adimplente").length;
+  const totalAdimplentes = socios.filter(
+    (s) => statusDe(s) === "adimplente"
+  ).length;
   const totalInativos = socios.filter((s) => statusDe(s) === "inativo").length;
-  const totalInadimplentes = socios.filter((s) => statusDe(s) === "inadimplente").length;
-  const taxaAdimplencia = socios.length ? Math.round((totalAdimplentes / socios.length) * 100) : 0;
-  const receitaMensal = socios.filter((s) => statusDe(s) === "adimplente").reduce((soma, s) => soma + s.plano, 0);
+  const totalInadimplentes = socios.filter(
+    (s) => statusDe(s) === "inadimplente"
+  ).length;
+  const taxaAdimplencia = socios.length
+    ? Math.round((totalAdimplentes / socios.length) * 100)
+    : 0;
+  const receitaMensal = socios
+    .filter((s) => statusDe(s) === "adimplente")
+    .reduce((soma, s) => soma + s.plano, 0);
 
   const listaLembrete = useMemo(() => {
     return socios
       .map((s) => ({ ...s, semContribuir: mesesEmAtraso(s) }))
-      .filter((s) => s.semContribuir > 0 && s.semContribuir < MESES_PARA_INATIVAR && ehContribuinteRegular(s))
+      .filter(
+        (s) =>
+          s.semContribuir > 0 &&
+          s.semContribuir < MESES_PARA_INATIVAR &&
+          ehContribuinteRegular(s)
+      )
       .sort((a, b) => b.semContribuir - a.semContribuir);
   }, [socios]);
 
@@ -426,7 +608,10 @@ export default function GestaoSociosTLC() {
     const mesAtual = new Date().getMonth() + 1;
     return socios
       .filter((s) => s.nascimento)
-      .map((s) => ({ ...s, diaAniversario: parseInt(s.nascimento.split("-")[2], 10) }))
+      .map((s) => ({
+        ...s,
+        diaAniversario: parseInt(s.nascimento.split("-")[2], 10),
+      }))
       .filter((s) => parseInt(s.nascimento.split("-")[1], 10) === mesAtual)
       .sort((a, b) => a.diaAniversario - b.diaAniversario);
   }, [socios]);
@@ -435,33 +620,48 @@ export default function GestaoSociosTLC() {
     const meses = ultimosMeses(6);
     return meses.map((m) => ({
       label: m.label,
-      adimplentes: socios.filter((s) => s.pagamentos && s.pagamentos[m.key]).length,
+      adimplentes: socios.filter((s) => s.pagamentos && s.pagamentos[m.key])
+        .length,
     }));
   }, [socios]);
 
   const dadosPlano = useMemo(
-    () => PLANOS.map((p) => ({ nome: `R$ ${p.valor}`, valor: socios.filter((s) => s.plano === p.valor).length })),
+    () =>
+      PLANOS.map((p) => ({
+        nome: `R$ ${p.valor}`,
+        valor: socios.filter((s) => s.plano === p.valor).length,
+      })),
     [socios]
   );
 
   const dadosPlanoAdimplentes = useMemo(
-    () => PLANOS.map((p) => ({
-      nome: `R$ ${p.valor}`,
-      valor: socios.filter((s) => s.plano === p.valor && statusDe(s) === "adimplente").length,
-    })),
+    () =>
+      PLANOS.map((p) => ({
+        nome: `R$ ${p.valor}`,
+        valor: socios.filter(
+          (s) => s.plano === p.valor && statusDe(s) === "adimplente"
+        ).length,
+      })),
     [socios]
   );
 
   const dadosMetodo = useMemo(
-    () => METODOS.map((m) => ({ nome: m.label, valor: socios.filter((s) => s.metodoPagamento === m.valor).length })),
+    () =>
+      METODOS.map((m) => ({
+        nome: m.label,
+        valor: socios.filter((s) => s.metodoPagamento === m.valor).length,
+      })),
     [socios]
   );
 
-  const dadosStatus = useMemo(() => ([
-    { nome: "Adimplentes", valor: totalAdimplentes },
-    { nome: "Inadimplentes", valor: totalInadimplentes },
-    { nome: "Inativos", valor: totalInativos },
-  ]), [totalAdimplentes, totalInadimplentes, totalInativos]);
+  const dadosStatus = useMemo(
+    () => [
+      { nome: "Adimplentes", valor: totalAdimplentes },
+      { nome: "Inadimplentes", valor: totalInadimplentes },
+      { nome: "Inativos", valor: totalInativos },
+    ],
+    [totalAdimplentes, totalInadimplentes, totalInativos]
+  );
 
   const socioNft = socios.find((s) => s.id === socioSelecionadoNft);
   const carteirinhasEmitidas = socios.filter((s) => s.nftTokenId);
@@ -577,20 +777,37 @@ export default function GestaoSociosTLC() {
             : `${socios.length} sócios cadastrados · ${totalAdimplentes} em dia · ${totalInadimplentes} inadimplentes · ${totalInativos} inativos`}
         </div>
         <div className="tlc-tabs">
-          <button className={`tlc-tab ${aba === "admin" ? "active" : ""}`} onClick={() => setAba("admin")}>
+          <button
+            className={`tlc-tab ${aba === "admin" ? "active" : ""}`}
+            onClick={() => setAba("admin")}
+          >
             <Users size={15} /> Painel administrativo
           </button>
-          <button className={`tlc-tab ${aba === "cobranca" ? "active" : ""}`} onClick={() => setAba("cobranca")}>
+          <button
+            className={`tlc-tab ${aba === "cobranca" ? "active" : ""}`}
+            onClick={() => setAba("cobranca")}
+          >
             <Bell size={15} /> Contribuintes
-            {listaLembrete.length > 0 && <span className="tlc-tab-count">{listaLembrete.length}</span>}
+            {listaLembrete.length > 0 && (
+              <span className="tlc-tab-count">{listaLembrete.length}</span>
+            )}
           </button>
-          <button className={`tlc-tab ${aba === "indicadores" ? "active" : ""}`} onClick={() => setAba("indicadores")}>
+          <button
+            className={`tlc-tab ${aba === "indicadores" ? "active" : ""}`}
+            onClick={() => setAba("indicadores")}
+          >
             <BarChart3 size={15} /> Indicadores
           </button>
-          <button className={`tlc-tab ${aba === "nft" ? "active" : ""}`} onClick={() => setAba("nft")}>
+          <button
+            className={`tlc-tab ${aba === "nft" ? "active" : ""}`}
+            onClick={() => setAba("nft")}
+          >
             <CreditCard size={15} /> Carteirinha NFT
           </button>
-          <button className={`tlc-tab ${aba === "parceiro" ? "active" : ""}`} onClick={() => setAba("parceiro")}>
+          <button
+            className={`tlc-tab ${aba === "parceiro" ? "active" : ""}`}
+            onClick={() => setAba("parceiro")}
+          >
             <Store size={15} /> Consulta de parceiros
           </button>
         </div>
@@ -601,33 +818,72 @@ export default function GestaoSociosTLC() {
           <div className="tlc-row">
             <div className="tlc-search">
               <Search size={15} color="var(--ink-soft)" />
-              <input placeholder="Buscar por nome ou código" value={busca} onChange={(e) => setBusca(e.target.value)} />
+              <input
+                placeholder="Buscar por nome ou código"
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
+              />
             </div>
-            <button className="tlc-btn tlc-btn-ghost" onClick={() => exportarCSV(listaFiltrada)} disabled={listaFiltrada.length === 0}>
+            <button
+              className="tlc-btn tlc-btn-ghost"
+              onClick={() => exportarCSV(listaFiltrada)}
+              disabled={listaFiltrada.length === 0}
+            >
               <Download size={15} /> Exportar CSV
             </button>
-            <button className="tlc-btn tlc-btn-primary" onClick={() => (mostrarForm ? cancelarForm() : abrirNovoCadastro())}>
+            <button
+              className="tlc-btn tlc-btn-primary"
+              onClick={() =>
+                mostrarForm ? cancelarForm() : abrirNovoCadastro()
+              }
+            >
               <UserPlus size={15} /> Novo sócio
             </button>
           </div>
 
           <div className="tlc-filtros">
-            <select value={filtroStatus} onChange={(e) => setFiltroStatus(e.target.value)}>
+            <select
+              value={filtroStatus}
+              onChange={(e) => setFiltroStatus(e.target.value)}
+            >
               <option value="todos">Status: todos</option>
               <option value="adimplente">Adimplentes</option>
               <option value="inadimplente">Inadimplentes</option>
               <option value="inativo">Inativos</option>
             </select>
-            <select value={filtroPlano} onChange={(e) => setFiltroPlano(e.target.value)}>
+            <select
+              value={filtroPlano}
+              onChange={(e) => setFiltroPlano(e.target.value)}
+            >
               <option value="todos">Plano: todos</option>
-              {PLANOS.map((p) => (<option key={p.valor} value={p.valor}>R$ {p.valor}</option>))}
+              {PLANOS.map((p) => (
+                <option key={p.valor} value={p.valor}>
+                  R$ {p.valor}
+                </option>
+              ))}
             </select>
-            <select value={filtroMetodo} onChange={(e) => setFiltroMetodo(e.target.value)}>
+            <select
+              value={filtroMetodo}
+              onChange={(e) => setFiltroMetodo(e.target.value)}
+            >
               <option value="todos">Método: todos</option>
-              {METODOS.map((m) => (<option key={m.valor} value={m.valor}>{m.label}</option>))}
+              {METODOS.map((m) => (
+                <option key={m.valor} value={m.valor}>
+                  {m.label}
+                </option>
+              ))}
             </select>
-            {(filtroStatus !== "todos" || filtroPlano !== "todos" || filtroMetodo !== "todos") && (
-              <button className="tlc-btn tlc-btn-ghost" onClick={() => { setFiltroStatus("todos"); setFiltroPlano("todos"); setFiltroMetodo("todos"); }}>
+            {(filtroStatus !== "todos" ||
+              filtroPlano !== "todos" ||
+              filtroMetodo !== "todos") && (
+              <button
+                className="tlc-btn tlc-btn-ghost"
+                onClick={() => {
+                  setFiltroStatus("todos");
+                  setFiltroPlano("todos");
+                  setFiltroMetodo("todos");
+                }}
+              >
                 Limpar filtros
               </button>
             )}
@@ -637,45 +893,101 @@ export default function GestaoSociosTLC() {
             <form className="tlc-form" onSubmit={salvarSocio}>
               <div className="tlc-field">
                 <label>Nome completo</label>
-                <input value={novo.nome} onChange={(e) => setNovo({ ...novo, nome: e.target.value })} placeholder="Nome completo" required />
+                <input
+                  value={novo.nome}
+                  onChange={(e) => setNovo({ ...novo, nome: e.target.value })}
+                  placeholder="Nome completo"
+                  required
+                />
               </div>
               <div className="tlc-field">
                 <label>TLC que fez</label>
-                <input value={novo.tlc} onChange={(e) => setNovo({ ...novo, tlc: e.target.value })} placeholder="Ex: TLC 45 - Maceió" />
+                <input
+                  value={novo.tlc}
+                  onChange={(e) => setNovo({ ...novo, tlc: e.target.value })}
+                  placeholder="Ex: TLC 45 - Maceió"
+                />
               </div>
               <div className="tlc-field">
                 <label>CPF</label>
-                <input value={novo.cpf} onChange={(e) => setNovo({ ...novo, cpf: e.target.value })} placeholder="000.000.000-00" required />
+                <input
+                  value={novo.cpf}
+                  onChange={(e) => setNovo({ ...novo, cpf: e.target.value })}
+                  placeholder="000.000.000-00"
+                  required
+                />
               </div>
               <div className="tlc-field">
                 <label>Telefone</label>
-                <input value={novo.telefone} onChange={(e) => setNovo({ ...novo, telefone: e.target.value })} placeholder="(82) 90000-0000" />
+                <input
+                  value={novo.telefone}
+                  onChange={(e) =>
+                    setNovo({ ...novo, telefone: e.target.value })
+                  }
+                  placeholder="(82) 90000-0000"
+                />
               </div>
               <div className="tlc-field">
                 <label>Data de nascimento</label>
-                <input type="date" value={novo.nascimento} onChange={(e) => setNovo({ ...novo, nascimento: e.target.value })} />
+                <input
+                  type="date"
+                  value={novo.nascimento}
+                  onChange={(e) =>
+                    setNovo({ ...novo, nascimento: e.target.value })
+                  }
+                />
               </div>
               <div className="tlc-field">
                 <label>Método de pagamento</label>
-                <select value={novo.metodoPagamento} onChange={(e) => setNovo({ ...novo, metodoPagamento: e.target.value })}>
-                  {METODOS.map((m) => (<option key={m.valor} value={m.valor}>{m.label}</option>))}
+                <select
+                  value={novo.metodoPagamento}
+                  onChange={(e) =>
+                    setNovo({ ...novo, metodoPagamento: e.target.value })
+                  }
+                >
+                  {METODOS.map((m) => (
+                    <option key={m.valor} value={m.valor}>
+                      {m.label}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="tlc-field">
                 <label>Plano</label>
-                <select value={novo.plano} onChange={(e) => setNovo({ ...novo, plano: e.target.value })}>
-                  {PLANOS.map((p) => (<option key={p.valor} value={p.valor}>R$ {p.valor} · {p.desconto}% de desconto</option>))}
+                <select
+                  value={novo.plano}
+                  onChange={(e) => setNovo({ ...novo, plano: e.target.value })}
+                >
+                  {PLANOS.map((p) => (
+                    <option key={p.valor} value={p.valor}>
+                      R$ {p.valor} · {p.desconto}% de desconto
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="tlc-field">
                 <label>Dia de vencimento</label>
-                <select value={novo.diaVencimento} onChange={(e) => setNovo({ ...novo, diaVencimento: e.target.value })}>
+                <select
+                  value={novo.diaVencimento}
+                  onChange={(e) =>
+                    setNovo({ ...novo, diaVencimento: e.target.value })
+                  }
+                >
                   {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
-                    <option key={d} value={d}>Dia {d}</option>
+                    <option key={d} value={d}>
+                      Dia {d}
+                    </option>
                   ))}
                 </select>
-                <div style={{ fontSize: 11, color: "var(--ink-soft)", marginTop: 4 }}>
-                  Em meses mais curtos (fevereiro, por exemplo), o vencimento cai automaticamente no último dia do mês.
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: "var(--ink-soft)",
+                    marginTop: 4,
+                  }}
+                >
+                  Em meses mais curtos (fevereiro, por exemplo), o vencimento
+                  cai automaticamente no último dia do mês.
                 </div>
               </div>
               <div className="tlc-field">
@@ -683,8 +995,12 @@ export default function GestaoSociosTLC() {
                 <input
                   value={
                     editandoId
-                      ? `${socios.find((s) => s.id === editandoId)?.codigo || ""} (não pode ser alterado)`
-                      : `gerado automaticamente (${String(dados?.contador || 1).padStart(4, "0")})`
+                      ? `${
+                          socios.find((s) => s.id === editandoId)?.codigo || ""
+                        } (não pode ser alterado)`
+                      : `gerado automaticamente (${String(
+                          dados?.contador || 1
+                        ).padStart(4, "0")})`
                   }
                   disabled
                 />
@@ -693,14 +1009,25 @@ export default function GestaoSociosTLC() {
                 <label>Observação (opcional)</label>
                 <input
                   value={novo.observacao}
-                  onChange={(e) => setNovo({ ...novo, observacao: e.target.value })}
+                  onChange={(e) =>
+                    setNovo({ ...novo, observacao: e.target.value })
+                  }
                   placeholder="Ex: avisou que vai atrasar em outubro por viagem"
                 />
               </div>
-              {erroForm && <div className="tlc-error" style={{ gridColumn: "1 / -1" }}>{erroForm}</div>}
+              {erroForm && (
+                <div className="tlc-error" style={{ gridColumn: "1 / -1" }}>
+                  {erroForm}
+                </div>
+              )}
               <div className="tlc-form-actions">
                 {editandoId && (
-                  <button className="tlc-btn tlc-btn-ghost" type="button" onClick={cancelarForm} style={{ marginRight: 8 }}>
+                  <button
+                    className="tlc-btn tlc-btn-ghost"
+                    type="button"
+                    onClick={cancelarForm}
+                    style={{ marginRight: 8 }}
+                  >
                     Cancelar
                   </button>
                 )}
@@ -715,7 +1042,10 @@ export default function GestaoSociosTLC() {
             <div className="tlc-empty">
               Nenhum sócio cadastrado ainda.
               <div style={{ marginTop: 12 }}>
-                <button className="tlc-btn tlc-btn-ghost" onClick={carregarExemplos}>
+                <button
+                  className="tlc-btn tlc-btn-ghost"
+                  onClick={carregarExemplos}
+                >
                   <RefreshCw size={14} /> Carregar sócios de exemplo
                 </button>
               </div>
@@ -723,28 +1053,46 @@ export default function GestaoSociosTLC() {
           )}
 
           {!carregando && socios.length > 0 && listaFiltrada.length === 0 && (
-            <div className="tlc-empty">Nenhum sócio corresponde a esses filtros.</div>
+            <div className="tlc-empty">
+              Nenhum sócio corresponde a esses filtros.
+            </div>
           )}
 
           {!carregando && listaFiltrada.length > 0 && (
             <table className="tlc-table">
               <thead>
                 <tr>
-                  <th></th><th>Nome</th><th>Código</th><th>Plano</th><th>Desconto</th>
-                  <th>Vencimento</th><th>Último pagamento</th><th>Status</th><th></th>
+                  <th></th>
+                  <th>Nome</th>
+                  <th>Código</th>
+                  <th>Plano</th>
+                  <th>Desconto</th>
+                  <th>Vencimento</th>
+                  <th>Último pagamento</th>
+                  <th>Status</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 {listaFiltrada.map((s) => {
                   const status = statusDe(s);
-                  const desconto = PLANOS.find((p) => p.valor === s.plano)?.desconto ?? 0;
+                  const desconto =
+                    PLANOS.find((p) => p.valor === s.plano)?.desconto ?? 0;
                   const aberto = !!expandidos[s.id];
                   return (
                     <>
                       <tr key={s.id}>
                         <td>
-                          <button className="tlc-icon-btn" onClick={() => toggleExpandido(s.id)} title="Ver detalhes">
-                            {aberto ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                          <button
+                            className="tlc-icon-btn"
+                            onClick={() => toggleExpandido(s.id)}
+                            title="Ver detalhes"
+                          >
+                            {aberto ? (
+                              <ChevronUp size={15} />
+                            ) : (
+                              <ChevronDown size={15} />
+                            )}
                           </button>
                         </td>
                         <td>{s.nome}</td>
@@ -755,19 +1103,42 @@ export default function GestaoSociosTLC() {
                         <td>{formatMes(ultimoPagamento(s))}</td>
                         <td>{renderBadge(status)}</td>
                         <td>
-                          <div style={{ display: "flex", gap: 4, justifyContent: "flex-end", flexWrap: "wrap" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: 4,
+                              justifyContent: "flex-end",
+                              flexWrap: "wrap",
+                            }}
+                          >
                             {status !== "adimplente" && (
-                              <button className="tlc-btn tlc-btn-ghost" onClick={() => marcarPagamento(s.id)} title="Marcar pagamento deste mês">
+                              <button
+                                className="tlc-btn tlc-btn-ghost"
+                                onClick={() => marcarPagamento(s.id)}
+                                title="Marcar pagamento deste mês"
+                              >
                                 Marcar pago
                               </button>
                             )}
-                            <button className="tlc-btn tlc-btn-ghost" onClick={() => gerarCobranca(s)} title="Gerar cobrança no Asaas">
+                            <button
+                              className="tlc-btn tlc-btn-ghost"
+                              onClick={() => gerarCobranca(s)}
+                              title="Gerar cobrança no Asaas"
+                            >
                               Gerar cobrança
                             </button>
-                            <button className="tlc-icon-btn" onClick={() => iniciarEdicao(s)} title="Editar sócio">
+                            <button
+                              className="tlc-icon-btn"
+                              onClick={() => iniciarEdicao(s)}
+                              title="Editar sócio"
+                            >
                               <Pencil size={15} />
                             </button>
-                            <button className="tlc-icon-btn" onClick={() => removerSocio(s.id)} title="Remover sócio">
+                            <button
+                              className="tlc-icon-btn"
+                              onClick={() => removerSocio(s.id)}
+                              title="Remover sócio"
+                            >
                               <Trash2 size={15} />
                             </button>
                           </div>
@@ -777,14 +1148,38 @@ export default function GestaoSociosTLC() {
                         <tr className="tlc-detail-row" key={`${s.id}-detalhe`}>
                           <td colSpan={9}>
                             <div className="tlc-detail-grid">
-                              <div><span>TLC que fez</span>{s.tlc || "—"}</div>
-                              <div><span>CPF</span>{s.cpf || "—"}</div>
-                              <div><span>Telefone</span>{s.telefone || "—"}</div>
-                              <div><span>Data de nascimento</span>{formatData(s.nascimento)}</div>
-                              <div><span>Método de pagamento</span>{metodoLabel(s.metodoPagamento)}</div>
-                              <div><span>Dia de vencimento escolhido</span>Dia {s.diaVencimento || 1}</div>
-                              <div><span>Carteirinha NFT</span>{s.nftTokenId || "não emitida"}</div>
-                              <div style={{ gridColumn: "1 / -1" }}><span>Observação</span>{s.observacao || "—"}</div>
+                              <div>
+                                <span>TLC que fez</span>
+                                {s.tlc || "—"}
+                              </div>
+                              <div>
+                                <span>CPF</span>
+                                {s.cpf || "—"}
+                              </div>
+                              <div>
+                                <span>Telefone</span>
+                                {s.telefone || "—"}
+                              </div>
+                              <div>
+                                <span>Data de nascimento</span>
+                                {formatData(s.nascimento)}
+                              </div>
+                              <div>
+                                <span>Método de pagamento</span>
+                                {metodoLabel(s.metodoPagamento)}
+                              </div>
+                              <div>
+                                <span>Dia de vencimento escolhido</span>Dia{" "}
+                                {s.diaVencimento || 1}
+                              </div>
+                              <div>
+                                <span>Carteirinha NFT</span>
+                                {s.nftTokenId || "não emitida"}
+                              </div>
+                              <div style={{ gridColumn: "1 / -1" }}>
+                                <span>Observação</span>
+                                {s.observacao || "—"}
+                              </div>
                             </div>
                           </td>
                         </tr>
@@ -798,24 +1193,34 @@ export default function GestaoSociosTLC() {
 
           {erro && <div className="tlc-error">{erro}</div>}
           <div className="tlc-note">
-            Sócios com {MESES_PARA_INATIVAR} meses seguidos sem pagamento aparecem automaticamente como "Inativo" —
-            voltam a "Adimplente" assim que um pagamento for marcado. Este painel é visível para qualquer pessoa que
-            abrir este link — não há login separado para administrador; em produção, restrinja o acesso com autenticação.
+            Sócios com {MESES_PARA_INATIVAR} meses seguidos sem pagamento
+            aparecem automaticamente como "Inativo" — voltam a "Adimplente"
+            assim que um pagamento for marcado. Este painel é visível para
+            qualquer pessoa que abrir este link — não há login separado para
+            administrador; em produção, restrinja o acesso com autenticação.
           </div>
         </div>
       )}
 
       {aba === "cobranca" && (
         <div className="tlc-card">
-          <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 18 }}>
-            O TLC é um movimento sem fins lucrativos — ninguém é cobrado por ficar sem contribuir em algum mês.
-            Esta lista serve só para lembrar, com carinho, quem contribui regularmente e ficou algum mês sem
+          <div
+            style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 18 }}
+          >
+            O TLC é um movimento sem fins lucrativos — ninguém é cobrado por
+            ficar sem contribuir em algum mês. Esta lista serve só para lembrar,
+            com carinho, quem contribui regularmente e ficou algum mês sem
             contribuir — pode ter sido só um esquecimento.
           </div>
 
-          <div className="tlc-kpis" style={{ gridTemplateColumns: "repeat(2, 1fr)" }}>
+          <div
+            className="tlc-kpis"
+            style={{ gridTemplateColumns: "repeat(2, 1fr)" }}
+          >
             <div className="tlc-kpi">
-              <div className="tlc-kpi-label">Contribuintes regulares sem contribuir este mês</div>
+              <div className="tlc-kpi-label">
+                Contribuintes regulares sem contribuir este mês
+              </div>
               <div className="tlc-kpi-value">{listaLembrete.length}</div>
             </div>
             <div className="tlc-kpi">
@@ -825,21 +1230,35 @@ export default function GestaoSociosTLC() {
           </div>
 
           {listaLembrete.length === 0 ? (
-            <div className="tlc-empty">Nenhum contribuinte regular precisa de lembrete no momento. 🎉</div>
+            <div className="tlc-empty">
+              Nenhum contribuinte regular precisa de lembrete no momento. 🎉
+            </div>
           ) : (
             <>
               <div className="tlc-chart-title" style={{ marginBottom: 4 }}>
                 Ordenado por quem está há mais tempo sem contribuir
               </div>
               <div className="tlc-cobranca-header">
-                <span>Sócio</span><span>Plano</span><span>Meses sem contribuir</span><span>Status</span><span></span>
+                <span>Sócio</span>
+                <span>Plano</span>
+                <span>Meses sem contribuir</span>
+                <span>Status</span>
+                <span></span>
               </div>
               {listaLembrete.map((s) => (
-                <div className="tlc-cobranca-item" key={s.id} style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr auto" }}>
+                <div
+                  className="tlc-cobranca-item"
+                  key={s.id}
+                  style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr auto" }}
+                >
                   <div>
                     <div className="tlc-cobranca-nome">{s.nome}</div>
                     <div className="tlc-cobranca-sub">
-                      {s.telefone && (<><Phone size={11} /> {s.telefone} · </>)}
+                      {s.telefone && (
+                        <>
+                          <Phone size={11} /> {s.telefone} ·{" "}
+                        </>
+                      )}
                       vence dia {proximoVencimento(s).getDate()}
                     </div>
                   </div>
@@ -848,36 +1267,72 @@ export default function GestaoSociosTLC() {
                     {s.semContribuir} {s.semContribuir === 1 ? "mês" : "meses"}
                   </span>
                   <span>{renderBadge(statusDe(s))}</span>
-                  <button className="tlc-btn tlc-btn-ghost" onClick={() => marcarPagamento(s.id)}>Registrar contribuição</button>
+                  <button
+                    className="tlc-btn tlc-btn-ghost"
+                    onClick={() => marcarPagamento(s.id)}
+                  >
+                    Registrar contribuição
+                  </button>
                 </div>
               ))}
             </>
           )}
 
-          <div style={{ marginTop: 28, paddingTop: 20, borderTop: "1px solid var(--border)" }}>
-            <div className="tlc-chart-title" style={{ marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+          <div
+            style={{
+              marginTop: 28,
+              paddingTop: 20,
+              borderTop: "1px solid var(--border)",
+            }}
+          >
+            <div
+              className="tlc-chart-title"
+              style={{
+                marginBottom: 4,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
               <Cake size={14} /> Aniversariantes do mês
             </div>
             {aniversariantesDoMes.length === 0 ? (
-              <div className="tlc-empty" style={{ padding: 16 }}>Nenhum sócio faz aniversário este mês.</div>
+              <div className="tlc-empty" style={{ padding: 16 }}>
+                Nenhum sócio faz aniversário este mês.
+              </div>
             ) : (
               <div className="tlc-aniversario-list">
                 {aniversariantesDoMes.map((s) => (
                   <div className="tlc-aniversario-item" key={s.id}>
                     <span>{s.nome}</span>
-                    <span className="tlc-aniversario-dia">dia {s.diaAniversario}</span>
+                    <span className="tlc-aniversario-dia">
+                      dia {s.diaAniversario}
+                    </span>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          <div style={{ marginTop: 28, paddingTop: 20, borderTop: "1px solid var(--border)" }}>
+          <div
+            style={{
+              marginTop: 28,
+              paddingTop: 20,
+              borderTop: "1px solid var(--border)",
+            }}
+          >
             <div className="tlc-chart-title" style={{ marginBottom: 4 }}>
               Histórico de inativos (4+ meses sem contribuir)
             </div>
-            <div style={{ fontSize: 12, color: "var(--ink-soft)", marginBottom: 12 }}>
-              Sem cobrança — apenas o registro de quais meses cada um contribuiu ou não, para consulta futura.
+            <div
+              style={{
+                fontSize: 12,
+                color: "var(--ink-soft)",
+                marginBottom: 12,
+              }}
+            >
+              Sem cobrança — apenas o registro de quais meses cada um contribuiu
+              ou não, para consulta futura.
             </div>
             {listaInativosHistorico.length === 0 ? (
               <div className="tlc-empty">Nenhum sócio inativo no momento.</div>
@@ -892,7 +1347,11 @@ export default function GestaoSociosTLC() {
                         return (
                           <div className="tlc-historico-mes" key={m.key}>
                             <span>{m.label}</span>
-                            {pago ? <CheckCircle2 size={14} color="var(--primary)" /> : <XCircle size={14} color="var(--border)" />}
+                            {pago ? (
+                              <CheckCircle2 size={14} color="var(--primary)" />
+                            ) : (
+                              <XCircle size={14} color="var(--border)" />
+                            )}
                           </div>
                         );
                       })}
@@ -909,7 +1368,8 @@ export default function GestaoSociosTLC() {
         <div className="tlc-card">
           {socios.length === 0 ? (
             <div className="tlc-empty">
-              Cadastre sócios (ou carregue os de exemplo na aba "Painel administrativo") para ver os indicadores.
+              Cadastre sócios (ou carregue os de exemplo na aba "Painel
+              administrativo") para ver os indicadores.
             </div>
           ) : (
             <>
@@ -937,36 +1397,79 @@ export default function GestaoSociosTLC() {
               </div>
 
               <div className="tlc-chart-box">
-                <div className="tlc-chart-title">Sócios em dia por mês (últimos 6 meses)</div>
+                <div className="tlc-chart-title">
+                  Sócios em dia por mês (últimos 6 meses)
+                </div>
                 <ResponsiveContainer width="100%" height={220}>
                   <BarChart data={dadosMensais}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                    <XAxis dataKey="label" tick={{ fontSize: 12, fill: "var(--ink-soft)" }} axisLine={{ stroke: "var(--border)" }} tickLine={false} />
-                    <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: "var(--ink-soft)" }} axisLine={false} tickLine={false} />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="var(--border)"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="label"
+                      tick={{ fontSize: 12, fill: "var(--ink-soft)" }}
+                      axisLine={{ stroke: "var(--border)" }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      allowDecimals={false}
+                      tick={{ fontSize: 12, fill: "var(--ink-soft)" }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
                     <Tooltip />
-                    <Bar dataKey="adimplentes" name="Sócios em dia" fill={COLOR_PRIMARY} radius={[4, 4, 0, 0]} />
+                    <Bar
+                      dataKey="adimplentes"
+                      name="Sócios em dia"
+                      fill={COLOR_PRIMARY}
+                      radius={[4, 4, 0, 0]}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
 
               <div className="tlc-charts" style={{ marginTop: 20 }}>
                 <div className="tlc-chart-box">
-                  <div className="tlc-chart-title">Distribuição por plano — geral</div>
+                  <div className="tlc-chart-title">
+                    Distribuição por plano — geral
+                  </div>
                   <ResponsiveContainer width="100%" height={220}>
                     <PieChart>
-                      <Pie data={dadosPlano} dataKey="valor" nameKey="nome" innerRadius={45} outerRadius={80} paddingAngle={2}>
-                        {dadosPlano.map((_, i) => (<Cell key={i} fill={PALETA[i % PALETA.length]} />))}
+                      <Pie
+                        data={dadosPlano}
+                        dataKey="valor"
+                        nameKey="nome"
+                        innerRadius={45}
+                        outerRadius={80}
+                        paddingAngle={2}
+                      >
+                        {dadosPlano.map((_, i) => (
+                          <Cell key={i} fill={PALETA[i % PALETA.length]} />
+                        ))}
                       </Pie>
                       <Tooltip />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
                 <div className="tlc-chart-box">
-                  <div className="tlc-chart-title">Distribuição por plano — só adimplentes</div>
+                  <div className="tlc-chart-title">
+                    Distribuição por plano — só adimplentes
+                  </div>
                   <ResponsiveContainer width="100%" height={220}>
                     <PieChart>
-                      <Pie data={dadosPlanoAdimplentes} dataKey="valor" nameKey="nome" innerRadius={45} outerRadius={80} paddingAngle={2}>
-                        {dadosPlanoAdimplentes.map((_, i) => (<Cell key={i} fill={PALETA[i % PALETA.length]} />))}
+                      <Pie
+                        data={dadosPlanoAdimplentes}
+                        dataKey="valor"
+                        nameKey="nome"
+                        innerRadius={45}
+                        outerRadius={80}
+                        paddingAngle={2}
+                      >
+                        {dadosPlanoAdimplentes.map((_, i) => (
+                          <Cell key={i} fill={PALETA[i % PALETA.length]} />
+                        ))}
                       </Pie>
                       <Tooltip />
                     </PieChart>
@@ -976,22 +1479,55 @@ export default function GestaoSociosTLC() {
 
               <div className="tlc-charts-secondary">
                 <div className="tlc-chart-box">
-                  <div className="tlc-chart-title">Sócios por método de pagamento</div>
+                  <div className="tlc-chart-title">
+                    Sócios por método de pagamento
+                  </div>
                   <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={dadosMetodo} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
-                      <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12, fill: "var(--ink-soft)" }} axisLine={false} tickLine={false} />
-                      <YAxis type="category" dataKey="nome" tick={{ fontSize: 12, fill: "var(--ink-soft)" }} axisLine={false} tickLine={false} width={110} />
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="var(--border)"
+                        horizontal={false}
+                      />
+                      <XAxis
+                        type="number"
+                        allowDecimals={false}
+                        tick={{ fontSize: 12, fill: "var(--ink-soft)" }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <YAxis
+                        type="category"
+                        dataKey="nome"
+                        tick={{ fontSize: 12, fill: "var(--ink-soft)" }}
+                        axisLine={false}
+                        tickLine={false}
+                        width={110}
+                      />
                       <Tooltip />
-                      <Bar dataKey="valor" name="Sócios" fill={COLOR_ACCENT} radius={[0, 4, 4, 0]} />
+                      <Bar
+                        dataKey="valor"
+                        name="Sócios"
+                        fill={COLOR_ACCENT}
+                        radius={[0, 4, 4, 0]}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
                 <div className="tlc-chart-box">
-                  <div className="tlc-chart-title">Adimplentes x inadimplentes x inativos</div>
+                  <div className="tlc-chart-title">
+                    Adimplentes x inadimplentes x inativos
+                  </div>
                   <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
-                      <Pie data={dadosStatus} dataKey="valor" nameKey="nome" innerRadius={45} outerRadius={80} paddingAngle={2}>
+                      <Pie
+                        data={dadosStatus}
+                        dataKey="valor"
+                        nameKey="nome"
+                        innerRadius={45}
+                        outerRadius={80}
+                        paddingAngle={2}
+                      >
                         <Cell fill={COLOR_PRIMARY} />
                         <Cell fill={COLOR_DANGER} />
                         <Cell fill={COLOR_INATIVO} />
@@ -1002,8 +1538,10 @@ export default function GestaoSociosTLC() {
                 </div>
               </div>
               <div className="tlc-note">
-                "Sócios em dia por mês" conta, para cada mês, quantos sócios atualmente cadastrados têm pagamento
-                registrado naquele mês. Sócios com {MESES_PARA_INATIVAR}+ meses seguidos sem pagar entram como "inativos".
+                "Sócios em dia por mês" conta, para cada mês, quantos sócios
+                atualmente cadastrados têm pagamento registrado naquele mês.
+                Sócios com {MESES_PARA_INATIVAR}+ meses seguidos sem pagar
+                entram como "inativos".
               </div>
             </>
           )}
@@ -1012,25 +1550,44 @@ export default function GestaoSociosTLC() {
 
       {aba === "nft" && (
         <div className="tlc-card">
-          <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 16, display: "flex", gap: 8, alignItems: "flex-start" }}>
+          <div
+            style={{
+              fontSize: 13,
+              color: "var(--ink-soft)",
+              marginBottom: 16,
+              display: "flex",
+              gap: 8,
+              alignItems: "flex-start",
+            }}
+          >
             <Sparkles size={16} style={{ marginTop: 2, flexShrink: 0 }} />
             <span>
-              Aqui a carteirinha NFT funciona como identidade digital do sócio — não como controle financeiro.
-              O status "ativa/suspensa" continua vindo da adimplência real; o token abaixo é uma representação
+              Aqui a carteirinha NFT funciona como identidade digital do sócio —
+              não como controle financeiro. O status "ativa/suspensa" continua
+              vindo da adimplência real; o token abaixo é uma representação
               simbólica para teste, sem emissão em blockchain de fato.
             </span>
           </div>
 
           {socios.length === 0 ? (
-            <div className="tlc-empty">Cadastre sócios para gerar carteirinhas.</div>
+            <div className="tlc-empty">
+              Cadastre sócios para gerar carteirinhas.
+            </div>
           ) : (
             <div className="tlc-nft-layout">
               <div>
                 <div className="tlc-field" style={{ marginBottom: 14 }}>
                   <label>Selecionar sócio</label>
-                  <select value={socioSelecionadoNft} onChange={(e) => setSocioSelecionadoNft(e.target.value)}>
+                  <select
+                    value={socioSelecionadoNft}
+                    onChange={(e) => setSocioSelecionadoNft(e.target.value)}
+                  >
                     <option value="">Escolha um sócio</option>
-                    {socios.map((s) => (<option key={s.id} value={s.id}>{s.nome} · {s.codigo}</option>))}
+                    {socios.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.nome} · {s.codigo}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -1038,33 +1595,58 @@ export default function GestaoSociosTLC() {
                   <>
                     <div className="tlc-carteirinha">
                       <div className="tlc-carteirinha-top">
-                        <div className="tlc-carteirinha-brand">TLC · Carteirinha de Sócio</div>
+                        <div className="tlc-carteirinha-brand">
+                          TLC · Carteirinha de Sócio
+                        </div>
                         {statusDe(socioNft) === "adimplente" ? (
-                          <span className="tlc-badge tlc-badge-ok" style={{ background: "rgba(255,255,255,0.18)", color: "white" }}>
+                          <span
+                            className="tlc-badge tlc-badge-ok"
+                            style={{
+                              background: "rgba(255,255,255,0.18)",
+                              color: "white",
+                            }}
+                          >
                             <CheckCircle2 size={12} /> Ativa
                           </span>
                         ) : (
-                          <span className="tlc-badge tlc-badge-no" style={{ background: "rgba(255,255,255,0.18)", color: "white" }}>
+                          <span
+                            className="tlc-badge tlc-badge-no"
+                            style={{
+                              background: "rgba(255,255,255,0.18)",
+                              color: "white",
+                            }}
+                          >
                             <XCircle size={12} /> Suspensa
                           </span>
                         )}
                       </div>
                       <div>
-                        <div className="tlc-carteirinha-nome">{socioNft.nome}</div>
-                        <div className="tlc-carteirinha-meta">{socioNft.tlc || "Turma não informada"} · Plano R$ {socioNft.plano}</div>
+                        <div className="tlc-carteirinha-nome">
+                          {socioNft.nome}
+                        </div>
+                        <div className="tlc-carteirinha-meta">
+                          {socioNft.tlc || "Turma não informada"} · Plano R${" "}
+                          {socioNft.plano}
+                        </div>
                       </div>
                       <div className="tlc-carteirinha-footer">
-                        <span className="tlc-carteirinha-token">{socioNft.nftTokenId || "token ainda não gerado"}</span>
+                        <span className="tlc-carteirinha-token">
+                          {socioNft.nftTokenId || "token ainda não gerado"}
+                        </span>
                         <span>{socioNft.codigo}</span>
                       </div>
                     </div>
                     <div style={{ marginTop: 14 }}>
                       {socioNft.nftTokenId ? (
                         <div className="tlc-note" style={{ marginTop: 0 }}>
-                          Carteirinha gerada em {formatData(socioNft.nftEmitidoEm)}.
+                          Carteirinha gerada em{" "}
+                          {formatData(socioNft.nftEmitidoEm)}.
                         </div>
                       ) : (
-                        <button className="tlc-btn tlc-btn-primary" onClick={() => gerarCarteirinha(socioNft.id)}>
+                        <button
+                          className="tlc-btn tlc-btn-primary"
+                          onClick={() => gerarCarteirinha(socioNft.id)}
+                        >
                           <CreditCard size={15} /> Gerar carteirinha
                         </button>
                       )}
@@ -1074,15 +1656,24 @@ export default function GestaoSociosTLC() {
               </div>
 
               <div>
-                <div className="tlc-chart-title">Carteirinhas já emitidas ({carteirinhasEmitidas.length})</div>
+                <div className="tlc-chart-title">
+                  Carteirinhas já emitidas ({carteirinhasEmitidas.length})
+                </div>
                 {carteirinhasEmitidas.length === 0 ? (
-                  <div className="tlc-empty" style={{ padding: 24 }}>Nenhuma carteirinha emitida ainda.</div>
+                  <div className="tlc-empty" style={{ padding: 24 }}>
+                    Nenhuma carteirinha emitida ainda.
+                  </div>
                 ) : (
                   <div className="tlc-nft-list">
                     {carteirinhasEmitidas.map((s) => (
                       <div className="tlc-nft-list-item" key={s.id}>
                         <span>{s.nome}</span>
-                        <span className="tlc-carteirinha-token" style={{ color: "var(--ink-soft)" }}>{s.nftTokenId}</span>
+                        <span
+                          className="tlc-carteirinha-token"
+                          style={{ color: "var(--ink-soft)" }}
+                        >
+                          {s.nftTokenId}
+                        </span>
                         {renderBadge(statusDe(s))}
                       </div>
                     ))}
@@ -1096,11 +1687,18 @@ export default function GestaoSociosTLC() {
 
       {aba === "parceiro" && (
         <div className="tlc-partner-box">
-          <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}>
-            Consulte pelo nome, código ou telefone do sócio para conceder o desconto de parceiro.
+          <div
+            style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}
+          >
+            Consulte pelo nome, código ou telefone do sócio para conceder o
+            desconto de parceiro.
           </div>
           <div className="tlc-partner-search">
-            <input placeholder="Nome completo, código ou telefone" value={buscaParceiro} onChange={(e) => setBuscaParceiro(e.target.value)} />
+            <input
+              placeholder="Nome completo, código ou telefone"
+              value={buscaParceiro}
+              onChange={(e) => setBuscaParceiro(e.target.value)}
+            />
           </div>
 
           {resultadoParceiro === "nao-encontrado" && (
@@ -1111,20 +1709,37 @@ export default function GestaoSociosTLC() {
           )}
 
           {resultadoParceiro && resultadoParceiro !== "nao-encontrado" && (
-            <div className={`tlc-result ${statusDe(resultadoParceiro) === "adimplente" ? "ok" : "no"}`}>
+            <div
+              className={`tlc-result ${
+                statusDe(resultadoParceiro) === "adimplente" ? "ok" : "no"
+              }`}
+            >
               <div className="tlc-result-name">{resultadoParceiro.nome}</div>
               {statusDe(resultadoParceiro) === "adimplente" ? (
                 <>
-                  <div className="tlc-badge tlc-badge-ok" style={{ marginBottom: 8 }}>
+                  <div
+                    className="tlc-badge tlc-badge-ok"
+                    style={{ marginBottom: 8 }}
+                  >
                     <ShieldCheck size={13} /> Sócio adimplente
                   </div>
                   <div>
                     Desconto de parceiro aplicável:{" "}
-                    <strong>{PLANOS.find((p) => p.valor === resultadoParceiro.plano)?.desconto ?? 0}%</strong>
+                    <strong>
+                      {PLANOS.find((p) => p.valor === resultadoParceiro.plano)
+                        ?.desconto ?? 0}
+                      %
+                    </strong>
                   </div>
                 </>
               ) : (
-                <div>Sócio {statusDe(resultadoParceiro) === "inativo" ? "inativo" : "inadimplente"} — desconto de parceiro não aplicável no momento.</div>
+                <div>
+                  Sócio{" "}
+                  {statusDe(resultadoParceiro) === "inativo"
+                    ? "inativo"
+                    : "inadimplente"}{" "}
+                  — desconto de parceiro não aplicável no momento.
+                </div>
               )}
             </div>
           )}
