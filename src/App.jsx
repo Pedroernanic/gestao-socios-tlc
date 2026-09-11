@@ -123,6 +123,30 @@ export default function GestaoSociosTLC() {
     salvar(lista);
   }
 
+  async function gerarCobranca(socio) {
+    try {
+      const resp = await fetch("/api/criar-cobranca", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome: socio.nome,
+          cpf: socio.cpf,
+          telefone: socio.telefone,
+          valor: socio.plano,
+          diaVencimento: socio.diaVencimento,
+          codigo: socio.codigo,
+        }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        alert("Não foi possível gerar a cobrança: " + JSON.stringify(data.error));
+        return;
+      }
+      window.open(data.link, "_blank");
+    } catch (err) {
+      alert("Erro ao conectar com o servidor de cobrança.");
+    }
+  }
   function removerSocio(id) {
     salvar((socios || []).filter((s) => s.id !== id));
   }
@@ -521,7 +545,10 @@ export default function GestaoSociosTLC() {
                       </td>
                       <td>
                         <div style={{ display: "flex", gap: 4, justifyContent: "flex-end" }}>
-                          {status !== "adimplente" && (
+                        <button className="tlc-btn tlc-btn-ghost" onClick={() => gerarCobranca(s)} title="Gerar cobrança no Asaas">
+                              Gerar cobrança
+                            </button>
+                            {status !== "adimplente" && (
                             <button
                               className="tlc-btn tlc-btn-ghost"
                               onClick={() => marcarPagamento(s.id)}
